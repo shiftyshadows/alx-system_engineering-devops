@@ -1,0 +1,9 @@
+#!/usr/bin/env/bash
+# Check if Apache log file exists
+if [[ -f "./apache-access.log" ]]; then
+    # Use awk to count occurrences and display the result
+    awk '{ count[$1 " " $9]++ } END { for (key in count) print count[key], key }' apache-access.log | sort -nr
+else
+    echo "Error: Apache log file not found."
+    exit 1
+fi
