@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# This script displays the time from 0 to 12 hours and 1 to 59 minutes.
+# Initialize variables for hours and minutes
+hour=0
+minute=1
+# Using a while loop to display the time for 12 hours and 59 minutes
+while [ $hour -le 12 ]
+do
+  echo "$(printf "%02d" $hour):$(printf "%02d" $minute)"
+  # Increment the minutes and check for rollover to the next hour
+  (( minute++ ))
+  if [ $minute -eq 60 ]; then
+    minute=0
+    (( hour++ ))
+  fi
+done
