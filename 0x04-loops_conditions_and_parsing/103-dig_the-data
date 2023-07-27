@@ -1,4 +1,4 @@
-#!/usr/bin/env/bash
+#!/usr/bin/env bash
 # Check if Apache log file exists
 if [[ -f "./apache-access.log" ]]; then
     # Use awk to count occurrences and display the result
