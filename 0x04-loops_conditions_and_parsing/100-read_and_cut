@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Function to extract the required information from a line
+get_user_info() {
+    IFS=":" read -r username user_id _ home_dir _ <<< "$1"
+    echo "$username:$user_id:$home_dir"
+}
+# Check if /etc/passwd file exists
+if [[ -f "/etc/passwd" ]]; then
+    # Read the file line by line using a while loop
+    while IFS= read -r line; do
+        get_user_info "$line"
+    done < "/etc/passwd"
+else
+    echo "Error: /etc/passwd file not found."
+    exit 1
+fi
+
