@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#Bash script that displays the PID, along with the process name, of processes whose name contain the word bash.
+pgrep -lf bash | while read -r pid_process; do
+  # Extract PID and process name from the 'pgrep' output using 'cut' command.
+  # 'cut' command uses whitespace as the delimiter and extracts the first and second fields (PID and process name).
+  pid=$(echo "$pid_process" | cut -d' ' -f1)
+  process=$(echo "$pid_process" | cut -d' ' -f2-)
+
+  # Display the PID and process name for each process containing the word 'bash'.
+  echo "$pid $process"
+done
