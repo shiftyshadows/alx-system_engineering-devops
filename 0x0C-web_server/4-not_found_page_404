@@ -14,7 +14,7 @@ then
 
     # Update package list
     sudo apt-get update
-    sudo apt full-upgrade -y
+#    sudo apt full-upgrade -y
 
     # Install nginx
     sudo apt-get install -y nginx
@@ -31,7 +31,7 @@ sudo chown -R ubuntu:ubuntu /var/log/nginx
 sudo cat index.html | sudo tee /var/www/html/index.html
 
 # Create a custom 404 page
-sudo echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
 
 # Ensure nginx is listening on port 80
 sudo cat default_404 | sudo tee /etc/nginx/sites-available/default
