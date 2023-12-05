@@ -1,30 +1,37 @@
 #!/usr/bin/env bash
-# Installs, configures, and starts the server
-apt-get update
-apt-get -y install nginx
-sudo ufw allow 'Nginx HTTP'
-mkdir -p /var/www/html/
-sudo chmod -R 755 /var/www
-echo 'Hello World!' > /var/www/html/index.html
-SERVER_CONFIG=\
-"server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-	root /var/www/html;
-	index index.html index.htm index.nginx-debian.html;
-	server_name _;
-	location / {
-		try_files \$uri \$uri/ =404;
-	}
-	if (\$request_filename ~ redirect_me){
-		rewrite ^ https://sketchfab.com/bluepeno/models permanent;
-	}
-}"
+# installs nginx and configures it on a remote server
 
-bash -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-enabled/default"
+# Update source list
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu/ focal nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+echo "deb-src [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu/ focal nginx" | sudo tee -a /etc/apt/sources.list.d/nginx.list
 
-if [ "$(pgrep -c nginx)" -le 0 ]; then
-	service nginx start
-else
-	service nginx restart
-fi
+# Recieve signing keys
+sudo gpg --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+sudo gpg --export --armor ABF5BD827BD9BF62 | sudo gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
+
+# Update package list
+sudo apt-get update
+sudo apt full-upgrade -y
+
+# Install nginx
+sudo apt-get install -y nginx
+
+# Make directories with appropriate permission
+sudo mkdir -p /var/run/nginx
+sudo mkdir -p /var/www/html
+sudo mkdir -p /etc/nginx/site-available/
+sudo chmod 755 /var/run/nginx /var/www/html /etc/nginx/site-available/
+sudo chown -R ubuntu:ubuntu /var/log/nginx
+
+# Create a default HTML page with "Hello World!"
+cat index.html | sudo tee /var/www/html/index.html
+
+# Ensure nginx is listening on port 80
+cat default_redirection | sudo tee /etc/nginx/site-available/default
+
+#Load configuration files
+#sudo nginx -c /etc/nginx/nginx.conf
+sudo nginx -c /etc/nginx/site-available/default
+
+# Reload nginx configuration
+sudo nginx -s reload

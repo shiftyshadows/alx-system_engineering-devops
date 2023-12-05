@@ -10,6 +10,10 @@ http {
         listen 80;
         server_name 54.198.34.62;
 
+        location /redirect_me {
+            return 301 http://example.com/new_page;
+        }
+
         location / {
             root /var/www/html/;
             index index.html;
