@@ -31,7 +31,7 @@ sudo chown -R ubuntu:ubuntu /var/log/nginx
 sudo cat index.html | sudo tee /var/www/html/index.html
 
 # Create a default HTML page with "Hello World!"
-sudo cat 404_custom.html | sudo tee /var/www/html/404.html
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
 
 # Ensure nginx is listening on port 80
 sudo cat default_404 | sudo tee /etc/nginx/sites-available/default
