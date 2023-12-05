@@ -28,13 +28,13 @@ sudo chmod 755 /var/run/nginx /var/www/html /etc/nginx/site-available/
 sudo chown -R ubuntu:ubuntu /var/log/nginx
 
 # Create a default HTML page with "Hello World!"
-sudo cat index.html | tee /var/www/html/index.html
+sudo cat index.html | sudo tee /var/www/html/index.html
 
 # Create a default HTML page with "Hello World!"
-sudo cat 404_custom.html | tee /var/www/html/404.html
+sudo cat 404_custom.html | sudo tee /var/www/html/404.html
 
 # Ensure nginx is listening on port 80
-sudo cat default_404 | tee /etc/nginx/site-available/default
+sudo cat default_404 | sudo tee /etc/nginx/site-available/default
 
 #Load configuration files
 #sudo nginx -c /etc/nginx/nginx.conf
