@@ -11,7 +11,7 @@ http {
         server_name 54.198.34.62;
 
         location /redirect_me {
-            return 301;
+            return 301 https://www.example.com/;
         }
 
         location / {
