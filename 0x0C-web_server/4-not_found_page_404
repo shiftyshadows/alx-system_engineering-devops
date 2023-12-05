@@ -1,20 +1,24 @@
 #!/usr/bin/env bash
 # installs nginx and configures it on a remote server
 
-# Update source list
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu/ focal nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-echo "deb-src [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu/ focal nginx" | sudo tee -a /etc/apt/sources.list.d/nginx.list
+# Install Nginx if not already installed
+if ! command -v nginx &> /dev/null
+then
+    # Update source list
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu/ focal nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+    echo "deb-src [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu/ focal nginx" | sudo tee -a /etc/apt/sources.list.d/nginx.list
 
-# Recieve signing keys
-sudo gpg --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
-sudo gpg --export --armor ABF5BD827BD9BF62 | sudo gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
+    # Recieve signing keys
+    sudo gpg --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+    sudo gpg --export --armor ABF5BD827BD9BF62 | sudo gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
 
-# Update package list
-sudo apt-get update
-sudo apt full-upgrade -y
+    # Update package list
+    sudo apt-get update
+    sudo apt full-upgrade -y
 
-# Install nginx
-sudo apt-get install -y nginx
+    # Install nginx
+    sudo apt-get install -y nginx
+fi
 
 # Make directories with appropriate permission
 sudo mkdir -p /var/run/nginx
@@ -24,10 +28,13 @@ sudo chmod 755 /var/run/nginx /var/www/html /etc/nginx/site-available/
 sudo chown -R ubuntu:ubuntu /var/log/nginx
 
 # Create a default HTML page with "Hello World!"
-index.html > sudo tee /var/www/html/index.html
+sudo tee /var/www/html/index.html < index.html
+
+# Create a default HTML page with "Hello World!"
+sudo tee /var/www/html/404.html < 404_custom.html
 
 # Ensure nginx is listening on port 80
-default_redirection > sudo tee /etc/nginx/site-available/default
+sudo tee /etc/nginx/site-available/default < default_404
 
 #Load configuration files
 #sudo nginx -c /etc/nginx/nginx.conf
