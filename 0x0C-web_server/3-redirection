@@ -24,10 +24,10 @@ sudo chmod 755 /var/run/nginx /var/www/html /etc/nginx/site-available/
 sudo chown -R ubuntu:ubuntu /var/log/nginx
 
 # Create a default HTML page with "Hello World!"
-cat index.html | sudo tee /var/www/html/index.html
+index.html > sudo tee /var/www/html/index.html
 
 # Ensure nginx is listening on port 80
-cat default_redirection | sudo tee /etc/nginx/site-available/default
+default_redirection > sudo tee /etc/nginx/site-available/default
 
 #Load configuration files
 #sudo nginx -c /etc/nginx/nginx.conf
