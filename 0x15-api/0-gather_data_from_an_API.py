@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """
-   This module defines a function that, using a REST API, for a given employee ID,
-   returns information about his/her TODO list progress.
+   This module defines a function that, using a REST API, for a given
+   employee ID, returns information about his/her TODO list progress.
 """
 import requests
 import sys
+
 
 def get_employee_todo_progress(employee_id):
     """
@@ -33,7 +34,8 @@ def get_employee_todo_progress(employee_id):
         total_tasks = len(todos)
 
         # Display the employee TODO list progress
-        print(f"Employee {employee_name} is done with tasks ({num_completed_tasks}/{total_tasks}):")
+        print("Employee {} is done with tasks ({}/{}):".format(
+            employee_name, num_completed_tasks, total_tasks))
         print(f"\t{employee_name}: {num_completed_tasks}/{total_tasks}")
 
         # Display the titles of completed tasks
@@ -43,6 +45,7 @@ def get_employee_todo_progress(employee_id):
         # Display an error message for unsuccessful requests
         print(f"Error: Unable to fetch TODO list for employee {employee_id}")
 
+
 if __name__ == "__main__":
     # Check if an employee ID is provided as a command-line argument
     if len(sys.argv) != 2:
@@ -50,8 +53,5 @@ if __name__ == "__main__":
     else:
         # Get the employee ID from the command-line argument
         employee_id = int(sys.argv[1])
-
         # Call the function to fetch and display TODO list progress
         get_employee_todo_progress(employee_id)
-
-
