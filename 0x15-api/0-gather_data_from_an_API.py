@@ -13,7 +13,7 @@ def get_employee_todo_progress(employee_id):
        retrieve the todo list fot the specified employee_id
     """
     # Specify the API endpoint for the employee's TODO list
-    api_url = f'https://jsonplaceholder.typicode.com/todos/1'
+    api_url = f'https://jsonplaceholder.typicode.com/todos'
 
     # Send a GET request to the API endpoint
     response = requests.get(api_url)
