@@ -8,42 +8,41 @@ import sys
 
 
 def get_employee_todo_progress(employee_id):
-    """
-       This defines the function that interacts with the API to
-       retrieve the todo list fot the specified employee_id
-    """
+    """ This is a function definition"""
+    # Specify the API endpoint
+    api_url = "https://jsonplaceholder.typicode.com/"
+    # Specify the API endpoint for users
+    api_user = "{}users/{}".format(api_url, employee_id)
     # Specify the API endpoint for the employee's TODO list
-    api_url = f'https://jsonplaceholder.typicode.com/todos'
+    api_user_td = "{}todos".format(api_url)
 
-    # Send a GET request to the API endpoint
-    response = requests.get(api_url)
-
+    u_response = requests.get(api_user)
+    td_response = requests.get(api_user_td, params={"userId": sys.argv[1]})
     # Check if the request was successful (status code 200)
-    if response.status_code == 200:
+    if td_response.status_code == 200:
         # Parse the JSON response
-        todos = response.json()
-
+        tds = td_response.json()
         # Extract employee name
-        employee_name = todos[0]['username']
-
+        e_name = u_response.json().get("name")
         # Count the number of completed tasks
-        completed_tasks = [todo for todo in todos if todo['completed']]
-        num_completed_tasks = len(completed_tasks)
-
+        cm_tasks = []
+        for td in tds:
+            if td.get("completed"):
+                cm_tasks.append(td.get("title"))
+        num_cm_tasks = len(cm_tasks)
         # Calculate the total number of tasks
-        total_tasks = len(todos)
-
+        num_tasks = len(tds)
         # Display the employee TODO list progress
         print("Employee {} is done with tasks ({}/{}):".format(
-            employee_name, num_completed_tasks, total_tasks))
-        print(f"\t{employee_name}: {num_completed_tasks}/{total_tasks}")
-
+            e_name, num_cm_tasks, num_tasks))
+        print("\t{}: {}/{}".format(e_name, num_cm_tasks, num_tasks))
         # Display the titles of completed tasks
-        for task in completed_tasks:
-            print(f"\t\t{task['title']}")
+        for task in cm_tasks:
+            print("\t\t{}".format(task))
     else:
         # Display an error message for unsuccessful requests
-        print(f"Error: Unable to fetch TODO list for employee {employee_id}")
+        print("Error: Unable to fetch TODO list for employee {}".format(
+            employee_id))
 
 
 if __name__ == "__main__":
