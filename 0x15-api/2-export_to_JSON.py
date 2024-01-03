@@ -4,6 +4,7 @@
    employee ID, returns information about his/her TODO list progress.
 """
 import csv
+import json
 import requests
 import sys
 
@@ -54,10 +55,27 @@ def write_to_csv(employee_id):
         print("Error: Unable to fetch TODO list for employee {}".format(
             employee_id))
 
+def write_to_json(employee_id):
+    """ This is a function definition"""
+    api_url = "https://jsonplaceholder.typicode.com/"
+    api_user = "{}users/{}".format(api_url, employee_id)
+    api_user_td = "{}todos".format(api_url)
+    u_response = requests.get(api_user)
+    td_response = requests.get(api_user_td, params={"userId": employee_id})
+    if td_response.status_code == 200:
+        tds = td_response.json()
+        e_name = u_response.json().get("username")
+        with open("{}.json".format(employee_id), "w") as jsonfile:
+            json.dump({employee_id: [{
+                "task": td.get("title"),
+                "completed": td.get("completed"),
+                "username": e_name
+            } for td in tds]}, jsonfile)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python script.py <employee_id>")
     else:
         e_id = int(sys.argv[1])
-        write_to_csv(e_id)
+        write_to_json(e_id)
