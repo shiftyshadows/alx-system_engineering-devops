@@ -37,7 +37,7 @@ def get_employee_todo_progress(employee_id):
             e_name, num_cm_tasks, num_tasks))
         # Display the titles of completed tasks
         for task in cm_tasks:
-            print("\t\t{}".format(task))
+            print("\t{}".format(task))
     else:
         # Display an error message for unsuccessful requests
         print("Error: Unable to fetch TODO list for employee {}".format(
