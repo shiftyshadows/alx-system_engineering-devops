@@ -33,7 +33,7 @@ def get_employee_todo_progress(employee_id):
         # Calculate the total number of tasks
         num_tasks = len(tds)
         # Display the employee TODO list progress
-        print("Employee {} is done with tasks ({}/{}):".format(
+        print("Employee {} is done with tasks({}/{}):".format(
             e_name, num_cm_tasks, num_tasks))
         # Display the titles of completed tasks
         for task in cm_tasks:
