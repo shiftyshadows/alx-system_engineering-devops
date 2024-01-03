@@ -5,6 +5,7 @@
 """
 import requests
 import sys
+import csv
 
 
 def get_employee_todo_progress(employee_id):
@@ -21,13 +22,29 @@ def get_employee_todo_progress(employee_id):
         cm_tasks = []
         for td in tds:
             if td.get("completed"):
-                cm_tasks.append(td.get("title"))
+                cm_tasks.append(td)
         num_cm_tasks = len(cm_tasks)
         num_tasks = len(tds)
+
+        csv_filename = "{}.csv".format(employee_id)
+        with open(csv_filename, mode='w', newline='') as csv_file:
+            fieldnames = ['USER_ID', 'USERNAME', 'TASK_COMPLETED_STATUS', 'TASK_TITLE']
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+            writer.writeheader()
+            for task in cm_tasks:
+                writer.writerow({
+                    'USER_ID': employee_id,
+                    'USERNAME': e_name,
+                    'TASK_COMPLETED_STATUS': task.get("completed"),
+                    'TASK_TITLE': task.get("title")
+                })
+
         print("Employee {} is done with tasks({}/{}):".format(
             e_name, num_cm_tasks, num_tasks))
         for task in cm_tasks:
-            print("\t {}".format(task))
+            print("\t {}".format(task.get("title")))
+        print("Data exported to {}".format(csv_filename))
     else:
         print("Error: Unable to fetch TODO list for employee {}".format(
             employee_id))
