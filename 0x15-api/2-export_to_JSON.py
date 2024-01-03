@@ -55,6 +55,7 @@ def write_to_csv(employee_id):
         print("Error: Unable to fetch TODO list for employee {}".format(
             employee_id))
 
+
 def write_to_json(employee_id):
     """ This is a function definition"""
     api_url = "https://jsonplaceholder.typicode.com/"
