@@ -7,6 +7,7 @@ import requests
 import sys
 import csv
 
+
 def get_employee_todo_progress(employee_id):
     """ This is a function definition"""
     api_url = "https://jsonplaceholder.typicode.com/"
@@ -32,6 +33,7 @@ def get_employee_todo_progress(employee_id):
         print("Error: Unable to fetch TODO list for employee {}".format(
             employee_id))
 
+
 def write_to_csv(employee_id):
     """ This is a function definition"""
     api_url = "https://jsonplaceholder.typicode.com/"
@@ -53,11 +55,9 @@ def write_to_csv(employee_id):
             employee_id))
 
 
-
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python script.py <employee_id>")
     else:
         e_id = int(sys.argv[1])
-#        get_employee_todo_progress(e_id)
         write_to_csv(e_id)
