@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Installs and setup haproxy load balancer
+
+#Set hostname
+hostname_cmd=$(hostname)
+while IFS= read -r hostname_reply; do
+    hostnamectl set-hostname $hostname_reply
+    echo "machine_hostname: $hostname_reply"
+done <<< $hostname_cmd
+
+# Specify the old and new values
+OLD_IP="127.0.0.1"
+OLD_HOSTNAME="localhost"
+NEW_HOSTNAME=$(hostname)
+
+if [ -e /etc/hosts.backup ];
+then
+    #Backup the original hosts file
+    sudo cp /etc/hosts /etc/hosts.backup_01
+else
+    sudo cp /etc/hosts /etc/hosts.backup
+fi
+
+# Update the hosts file
+awk -v old_ip="$OLD_IP" -v old_hostname="$OLD_HOSTNAME" -v new_hostname="$NEW_HOSTNAME" \
+    '$1 == old_ip && $2 == old_hostname { print old_ip "\t" old_hostname "\t" new_hostname; next } 1' /etc/hosts | sudo tee /etc/hosts > /dev/null
+
+#sudo sed -i "s/$OLD_IP\s*$OLD_HOSTNAME/$OLD_IP\t$OLD_HOSTNAME\t$NEW_HOSTNAME/g" /etc/hosts
+
+# Display the updated hosts file
+cat /etc/hosts
+echo "Host entry updated successfully."
+
+
