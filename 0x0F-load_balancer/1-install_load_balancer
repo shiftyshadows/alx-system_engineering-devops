@@ -32,8 +32,8 @@ frontend my_frontend
 
 backend my_backend
     balance roundrobin
-    server 251219-web-01 52.91.178.118:80 check
-    server 251219-web-02 100.25.41.192:80 check
+    server web-01 52.91.178.118:80 check
+    server web-02 100.25.41.192:80 check
 "
 # Update the system
 if ! command -v haproxy &> /dev/null
