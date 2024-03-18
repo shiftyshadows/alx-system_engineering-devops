@@ -3,44 +3,48 @@
 
 # Replace [STUDENT_ID] with your actual student ID
 STUDENT_ID="251219"
-
 HAPROXY_CONFIG="
 global
     maxconn 50000
     log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
     user haproxy
     group haproxy
-    stats socket /run/haproxy/admin.sock user haproxy group haproxy mode 660 level admin expose-fd listeners
-    ssl-default-bind-ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256
-    ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+    stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+    stats timeout 30000
+    daemon
 
 defaults
     log global
     mode http
-    option httplog
-    option dontlognull
-    timeout connect 10s
-    timeout client 30s
-    timeout server 30s
+    option tcplog
+    option http-server-close
+    option forwardfor
+    timeout connect 5000
+    timeout client 30000
+    timeout server 30000
 
 frontend my_frontend
     bind *:80
+    stats uri /haproxy?stats
     default_backend my_backend
 
 backend my_backend
     balance roundrobin
-    server web-01 251219-web-01:80 check
-    server web-02 251219-web-02:80 check
+    server 251219-web-01 52.91.178.118:80 check
+    server 251219-web-02 100.25.41.192:80 check
 "
 # Update the system
 if ! command -v haproxy &> /dev/null
 then
+    sudo apt-get install --no-install-recommends software-properties-common
     sudo add-apt-repository ppa:vbernat/haproxy-2.8 -y
     sudo apt update
     #sudo apt upgrade -y
 
     # Install HAProxy
-    sudo apt install -y haproxy
+    sudo apt install -y haproxy=2.8.\*
 fi
 
 # Configure HAProxy
@@ -50,3 +54,5 @@ echo -e "$HAPROXY_CONFIG" | sudo tee /etc/haproxy/haproxy.cfg
 # Enable HAProxy management via init script
 sudo systemctl enable haproxy
 sudo service haproxy start
+
+
