@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # nginx debugging script - Configures an Nginx server to listen on port 80.
-ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-sudo service nginx start
+sudo apt install nginx
+nginx
 rm /run/nginx.pid
