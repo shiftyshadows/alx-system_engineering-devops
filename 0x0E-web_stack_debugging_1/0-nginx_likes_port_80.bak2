@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# nginx debugging script - Configures an Nginx server to listen on port 80.
+if ! command -v nginx &> /dev/null
+then
+    # Install Prerequisites
+    sudo apt install curl gnupg2 ca-certificates lsb-release ubuntu-keyring
+    # Recieve signing keys
+    curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+#    sudo gpg --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+#    sudo gpg --export --armor ABF5BD827BD9BF62 | sudo gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg
+    # Update source list
+    OS=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
+    RELEASE=$(lsb_release -cs)
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/${OS} ${RELEASE} nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+    echo "deb-src [arch=amd64 signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/${OS} ${RELEASE} nginx" | sudo tee -a /etc/apt/sources.list.d/nginx.list
+    # Set up repository pinning
+    echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+    # Update package list
+    sudo apt update
+    # Install nginx
+    sudo apt install -y nginx
+fi
+nginx
