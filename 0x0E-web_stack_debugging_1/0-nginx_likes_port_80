@@ -5,4 +5,4 @@ then
     sudo apt update
     sudo apt install -y nginx
 fi
-nginx
+sudo nginx
