@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-# nginx debugging script - Configures an Nginx server to listen on port 80.
-if ! command -v nginx &> /dev/null
-then
-    sudo apt update
-    sudo apt install -y nginx
-fi
-nginx
