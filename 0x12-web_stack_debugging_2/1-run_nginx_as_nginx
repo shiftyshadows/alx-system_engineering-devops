@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Create an nginx user (if not already created)
+useradd -m nginx
+# Configure Nginx to run as the nginx user
+sed -i 's/user www-data;/user nginx;/' /etc/nginx/nginx.conf
+# Update Nginx to listen on all active IPs on port 8080
+sed -i "s/80/8080/g" /etc/nginx/sites-available/default
+chmod 644 /etc/nginx/nginx.conf
+pkill apache2
+sudo -u nginx service nginx start
