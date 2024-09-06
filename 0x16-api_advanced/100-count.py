@@ -3,7 +3,6 @@
     parses the title of all hot articles, and prints a sorted count of
     given keywords.
 """
-
 import requests
 import re
 from collections import Counter
@@ -32,17 +31,13 @@ def count_words(subreddit, word_list, word_count=None, after=None):
       alphabetically for ties.
     - If no keywords match or the subreddit is invalid, it prints nothing.
     """
-
     if word_count is None:
         word_count = Counter()
-
     # Define a custom User-Agent to avoid blocking by Reddit's API
     headers = {'User-Agent': 'hot-articles-script:v1.0'}
-
     # Set up the URL for Reddit's hot articles with pagination handling
     url = f'https://www.reddit.com/r/{subreddit}/hot.json'
     params = {'after': after, 'limit': 100}  # Limit results to 100 per page
-
     try:
         # Make the request to the Reddit API without following redirects
         response = requests.get(url, headers=headers, params=params,
@@ -51,14 +46,11 @@ def count_words(subreddit, word_list, word_count=None, after=None):
         # print nothing
         if response.status_code != 200:
             return
-
         # Parse the JSON response
         data = response.json()
-
         # Retrieve the list of posts and 'after' value for pagination
         posts = data.get('data', {}).get('children', [])
         after = data.get('data', {}).get('after', None)
-
         # Process each post title
         for post in posts:
             title = post['data']['title'].lower()  # Convert title to lowercase
@@ -67,7 +59,6 @@ def count_words(subreddit, word_list, word_count=None, after=None):
                 word_pattern = r'\b' + re.escape(word.lower()) + r'\b'
                 word_count[word] += len(re.findall(word_pattern, title,
                                         re.IGNORECASE))
-
         # If there are more pages, recurse
         if after:
             return count_words(subreddit, word_list, word_count, after)
