@@ -20,6 +20,12 @@ def top_ten(subreddit):
     sub_info = requests.get(url, headers=header, allow_redirects=False)
     if sub_info.status_code >= 300:
         print('None')
-    else:
-        for child in sub_info.json().get("data").get("children"):
-            print(child.get("data").get("title"))
+    try:
+        data = sub_info.json()
+        posts = data['data']['children']
+        for post in posts:
+            print(post['data']['title'])
+    except ValueError:
+            print("Error: Response is not in JSON format")
+#        for child in sub_info.json().get("data").get("children"):
+#            print(child.get("data").get("title"))
