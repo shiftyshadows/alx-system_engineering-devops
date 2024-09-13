@@ -8,24 +8,28 @@ import requests
 
 def top_ten(subreddit):
     """
-        Queries the Reddit API and returns the top 10 hot posts
-        of the subreddit.
+    Queries the Reddit API and prints the titles of the first 10 hot posts
+    for a given subreddit. If the subreddit is invalid, prints None.
+
+    Args:
+        subreddit (str): The name of the subreddit.
     """
     url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
-    header = {
+    headers = {
         "User-Agent": (
-            "Python:subreddit.subscriber.counter:v1.0 (by /u/shifty_shadows)"
+            "Python:subreddit.hot.posts.v1.0 (by /u/shifty_shadows)"
         )
     }
-    sub_info = requests.get(url, headers=header, allow_redirects=False)
-    if sub_info.status_code >= 300:
-        print('None')
+
     try:
-        data = sub_info.json()
-        posts = data['data']['children']
-        for post in posts:
-            print(post['data']['title'])
-    except ValueError:
-            print("Error: Response is not in JSON format")
-#        for child in sub_info.json().get("data").get("children"):
-#            print(child.get("data").get("title"))
+        response = requests.get(url, headers=headers, allow_redirects=False)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            data = response.json().get('data', {}).get('children', [])
+            for post in data:
+                print(post['data']['title'])
+        else:
+            print(None)
+    except requests.RequestException:
+        print(None)
