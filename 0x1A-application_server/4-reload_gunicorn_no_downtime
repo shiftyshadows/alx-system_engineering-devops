@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Gracefully reload Gunicorn by sending the SIGHUP signal to the master process
+
+# Get the Gunicorn master process ID (PID)
+GUNICORN_PID=$(cat /run/gunicorn.pid)
+
+# Check if the PID file exists and if the process is running
+if [ -z "$GUNICORN_PID" ]; then
+    echo "Gunicorn master PID file not found."
+    exit 1
+elif ! kill -0 "$GUNICORN_PID" > /dev/null 2>&1; then
+    echo "Gunicorn process with PID $GUNICORN_PID is not running."
+    exit 1
+else
+    echo "Gracefully reloading Gunicorn (PID: $GUNICORN_PID)..."
+    # Send the SIGHUP signal to the Gunicorn master process to reload
+    kill -HUP "$GUNICORN_PID"
+    echo "Reload signal sent successfully."
+fi
